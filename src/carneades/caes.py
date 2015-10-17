@@ -162,6 +162,8 @@ from collections import namedtuple, defaultdict
 import logging
 import os
 import sys
+import io
+import re
 
 from igraph import Graph, plot
 
@@ -787,8 +789,21 @@ class CAES(object):
         args = self.argset.get_arguments(con)
         return self.max_weight_applicable(args)
 
+class Reader():
+    """
+    Helper class to read an argument from a text file and apply it to the CAES.
+    """
+    def load(self, lines):
+        lex = Lexer()
+        for line in lines:
+            lex.tokenise(line.split(' '))
 
-
+class Lexer():
+    """
+    Helper class to lex the text file that is read in with Reader.
+    """
+    def tokenise(self, word):
+       print (word) 
 
 def arg_demo():
     """
@@ -828,8 +843,14 @@ DOCTEST = False
 
 if __name__ == '__main__':
 
-    if DOCTEST:
-        import doctest
-        doctest.testmod(optionflags=doctest.NORMALIZE_WHITESPACE)
-    else:
-        arg_demo()
+    # use input for python3
+    data = input('Please enter the path to your argument text file: ')
+    assert os.path.exists(data), "The file " + data + " could not be found."
+    reader = Reader()
+    with open(data) as f:
+        reader.load(f.readlines())
+    #if DOCTEST:
+    #import doctest
+    #    doctest.testmod(optionflags=doctest.NORMALIZE_WHITESPACE)
+    #else:
+    #    arg_demo()
